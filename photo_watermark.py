@@ -92,6 +92,9 @@ class PhotoWatermark:
                 if shooting_date is None:
                     print(f"警告: {os.path.basename(image_path)} 未找到拍摄日期信息")
                     shooting_date = "未知日期"
+                else:
+                    # 测试功能：输出拍摄时间到控制台
+                    print(f"📸 {os.path.basename(image_path)} 的拍摄时间: {shooting_date}")
                 
                 # 创建透明层用于绘制水印
                 txt_layer = Image.new('RGBA', img.size, (255, 255, 255, 0))
@@ -130,7 +133,7 @@ class PhotoWatermark:
                 watermarked = Image.alpha_composite(img, txt_layer)
                 
                 # 转换回RGB模式并保存
-                if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg'):
+                if str(output_path).lower().endswith('.jpg') or str(output_path).lower().endswith('.jpeg'):
                     watermarked = watermarked.convert('RGB')
                 
                 watermarked.save(output_path, quality=95)
@@ -172,6 +175,16 @@ class PhotoWatermark:
             return
         
         print(f"找到 {len(image_files)} 张图片，开始处理...")
+        
+        # 测试功能：先显示所有图片的拍摄时间
+        print("\n=== 拍摄时间信息预览 ===")
+        for img_path in image_files:
+            shooting_date = self.get_shooting_date(img_path)
+            if shooting_date:
+                print(f"📸 {img_path.name}: {shooting_date}")
+            else:
+                print(f"📷 {img_path.name}: 无拍摄时间信息")
+        print("=======================\n")
         
         # 处理每张图片
         success_count = 0
